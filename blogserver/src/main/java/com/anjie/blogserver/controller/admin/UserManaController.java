@@ -28,7 +28,9 @@ public class UserManaController {
 
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
     public User getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
+        User user=new User();
+        user.setId(id);
+        return userService.getUserById(user);
     }
 
     @RequestMapping(value = "/roles", method = RequestMethod.GET)

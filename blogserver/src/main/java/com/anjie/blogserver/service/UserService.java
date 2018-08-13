@@ -6,6 +6,9 @@ import com.anjie.blogserver.mapper.RolesMapper;
 import com.anjie.blogserver.mapper.UserMapper;
 import com.anjie.blogserver.utils.Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -39,6 +42,7 @@ public class UserService implements UserDetailsService{//自定义需要实现Us
      * 1表示用户名重复
      * 2表示失败
      */
+    @CachePut(value = "user" ,key = "#user.id") //新增或更新数据到缓存，其中缓存名称为user,数据的key为id
     public int reg(User user) {
         User loadUserByUsername = userMapper.loadUserByUsername(user.getUsername());
         if (loadUserByUsername != null) {
@@ -75,7 +79,7 @@ public class UserService implements UserDetailsService{//自定义需要实现Us
     public int updateUserEnabled(Boolean enabled, Long uid) {
         return userMapper.updateUserEnabled(enabled, uid);
     }
-
+    @CacheEvict(value = "user")  //从缓存user中删除id为uid的数据
     public int deleteUserById(Long uid) {
         return userMapper.deleteUserById(uid);
     }
@@ -84,8 +88,8 @@ public class UserService implements UserDetailsService{//自定义需要实现Us
         int i = userMapper.deleteUserRolesByUid(id);
         return userMapper.setUserRoles(rids, id);
     }
-
-    public User getUserById(Long id) {
-        return userMapper.getUserById(id);
+    @Cacheable(value = "user",key ="#user.id")
+    public User getUserById(User user) {
+        return userMapper.getUserById(user.getId());
     }
 }
