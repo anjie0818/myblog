@@ -51,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {//扩张spr
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http.authorizeRequests()
                 .antMatchers("/","/reg").permitAll() //请求路径"/"允许访问
                 .antMatchers("/admin/category/all").authenticated() //需要校验才能范围
