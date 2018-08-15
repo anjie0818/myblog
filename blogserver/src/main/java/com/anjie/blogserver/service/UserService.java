@@ -42,7 +42,7 @@ public class UserService implements UserDetailsService{//自定义需要实现Us
      * 1表示用户名重复
      * 2表示失败
      */
-    @CachePut(value = "user" ,key = "#user.id") //新增或更新数据到缓存，其中缓存名称为user,数据的key为id
+//    @CachePut(value = "user" ,key = "#user.id") //新增或更新数据到缓存，其中缓存名称为user,数据的key为id
     public int reg(User user) {
         User loadUserByUsername = userMapper.loadUserByUsername(user.getUsername());
         if (loadUserByUsername != null) {
